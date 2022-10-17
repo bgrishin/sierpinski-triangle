@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Triangle Fractal</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 85vh;
+            flex-direction: column;
+        }
+
+        #canvas {
+            height: 58vh;
+            width: 58vh;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 200px;
+            height: 30px;
+            border: none;
+            background: #dadada;
+            cursor: pointer;
+            transition: .3s;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #939393;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" height="600" width="600"></canvas>
+    <button onclick="showFinalResult()">Show Final Result</button>
+<script>
+    const canvas = document.getElementById("canvas"),
+        ctx = canvas.getContext('2d')
+
+    const T = [[299, 0], [0, 599], [599, 599]];
+
+    let current = [299, 299];
+
+    function midPoint([x1, y1], [x2, y2]) {
+        return [(x1 + x2) / 2, (y1 + y2) / 2];
+    }
+
+    function putPixel(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, 2, 2);
+    }
+
+    function randomInRange(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const maxSteps = 500000;
+
+    function step() {
+        const to = randomInRange(0, 2);
+        current = midPoint(current, T[to]);
+        putPixel(...current, '#4e77ff');
+    }
+
+    function showFinalResult() {
+        ctx.clearRect(0, 0, 600, 600);
+        clearInterval(interval)
+        for(let i = 0; i < maxSteps; i++) {
+            step()
+        }
+    }
+
+    ctx.beginPath()
+    ctx.strokeStyle = "#c4c4c4"
+    ctx.lineWidth = 1
+
+    ctx.moveTo(...T[0])
+    ctx.lineTo(...T[1])
+    ctx.lineTo(...T[2])
+    ctx.lineTo(...T[0])
+    ctx.stroke()
+
+    let i = 0
+    const interval = setInterval(() => {
+        i++
+        step()
+    }, 10)
+    if(i > maxSteps) {
+        clearInterval(interval)
+    }
+</script>
+</body>
+</html>
